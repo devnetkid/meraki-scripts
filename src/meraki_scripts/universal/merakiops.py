@@ -118,3 +118,11 @@ def select_network(dashboard, org, lines_to_display=25):
     return ([network_list[int(selected)]["id"], network_list[int(selected)]["name"]])
 
 
+def get_networks(dashboard, org):
+    try:
+        networks = dashboard.organizations.getOrganizationNetworks(org)
+        return networks
+    except meraki.APIError as e:
+        print(f"reason = {e.reason}")
+
+

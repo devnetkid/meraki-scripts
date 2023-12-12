@@ -8,7 +8,8 @@ version = "0.0.1"
 dynamic = ["dependencies"]
 
 [project.scripts]
-addresses = "meraki_scripts.get_addresses:main"
+addresses = "meraki_scripts.addresses:main"
+networks = "meraki_scripts.networks:main"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
