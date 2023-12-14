@@ -1,6 +1,7 @@
 """Find all sites with cellular connection create csv file from data
 
-File includes: Site name, Model, Connection, Signal, APN, ICCID, RSRP, RSRQ
+CSV file includes: 
+    Site, Model, Status, Connection, Signal, APN, ICCID, RSRP, RSRQ
 
 """
 
@@ -25,7 +26,7 @@ def convert_network_id_to_name(networks, cellular_data):
         if site.split(",")[0] == "Site":
             new_cellular_data.append(site)
             continue
-        log.debug(f"Site data is: {site}")
+        log.debug(f"Site data is: {site.strip()}")
         site_data = site.split(",")
         log.debug(f"network ID: {site_data[0]}")
         for network in networks:
@@ -34,7 +35,7 @@ def convert_network_id_to_name(networks, cellular_data):
                 log.debug(f"Site name is {site_name}")
                 site_data[0] = site_name
                 site_data = ','.join(site_data)
-                log.debug(f"Site Data: {site_data}")
+                log.debug(f"Site Data: {site_data.strip()}")
                 break
         new_cellular_data.append(site_data)
     return new_cellular_data
@@ -76,7 +77,6 @@ def find_cellular_uplinks(appliances):
                     rsrq = "" + ","
                 cell_data = conn + signal + apn +iccid + rsrp + rsrq + "\n"
                 new_line = site + model + status + cell_data
-                print(repr(new_line))
                 cellular_uplinks.append(new_line)
     return cellular_uplinks
 
