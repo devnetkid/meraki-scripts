@@ -1,7 +1,7 @@
 """Doc_String"""
 
 import logging
-from meraki_scripts.universal import merakiops
+from meraki_scripts.universal import fileops, merakiops
 
 log = logging.getLogger(__name__)
 logging.basicConfig(filename='debug.log', level=logging.DEBUG)
@@ -17,6 +17,16 @@ def main():
         print(response)
     except Exception as e:
         print(e)
+    lines = []
+    for stats in response:
+        start = stats["startTs"]
+        end = stats["endTs"]
+        loss = stats["lossPercent"]
+        latency = stats["latencyMs"]
+        jitter = stats["jitter"]
+        line = start + "," + end + "," + str(loss) + "," + str(latency) + "," + str(jitter) + "\n"
+        lines.append(line)
+    fileops.writelines_to_file("output/stats.csv", lines)
 
 
 if __name__ == "__main__":
