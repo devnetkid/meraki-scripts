@@ -126,3 +126,18 @@ def get_networks(dashboard, org):
         print(f"reason = {e.reason}")
 
 
+def get_mx_serial_number(dashboard, net_id):
+    has_spare = False
+    primary_mx_sn = None
+    spare_mx_sn = None
+    try:
+        warm_spare = dashboard.appliance.getNetworkApplianceWarmSpare(net_id)
+        if warm_spare["enabled"]:
+            has_spare = True
+            spare_mx_sn = warm_spare["spareSerial"]
+        primary_mx_sn = warm_spare["primarySerial"]
+        return (has_spare, primary_mx_sn, spare_mx_sn)
+    except meraki.APIError as e:
+        print(f"reason = {e.reason}")
+        print(f"error = {e.message}")
+
