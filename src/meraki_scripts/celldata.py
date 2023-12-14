@@ -10,6 +10,7 @@ logging.basicConfig(filename="output/debug.log", level=logging.DEBUG)
 UPLINK = "cellular"
 IP = "8.8.8.8"
 
+
 def main():
     dashboard = merakiops.get_dashboard()
     orgs = merakiops.select_organization(dashboard)
