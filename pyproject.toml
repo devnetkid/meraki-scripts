@@ -11,6 +11,7 @@ dynamic = ["dependencies"]
 addresses = "meraki_scripts.addresses:main"
 networks = "meraki_scripts.networks:main"
 celldata = "meraki_scripts.celldata:main"
+cellular = "meraki_scripts.cellular:main"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
