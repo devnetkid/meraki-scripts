@@ -19,6 +19,9 @@ just one you may need to copy over some of the functions found there.
   <dt>networks</dt>
   <dd>This script will pull all network ID and names found then write 
     them in a comma separated format.</dd>
+  <dt>celldata</dt>
+  <dd>Use this script to pull loss, latency, and jitter for a specified
+  network.</dd>
 </dl>
 
 

@@ -1,4 +1,8 @@
-"""Creates a csv file showing loss, latency, and jitter"""
+"""Creates a csv file showing loss, latency, and jitter
+
+https://developer.cisco.com/meraki/api-v1/get-device-loss-and-latency-history/
+
+"""
 
 import logging
 
