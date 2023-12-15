@@ -5,6 +5,7 @@ import sys
 
 import meraki
 
+from meraki_scripts.universal import fileops
 
 def get_dashboard(key=None, print_console=False, output_log=False):
     """Instantiate the Meraki dashboard
@@ -43,7 +44,7 @@ def validate_integer_in_range(end_range):
     while True:
         try:
             selected = int(
-                input("\nEnter the number next to the name you would like to use: ")
+                input("\nOption >> ")
             )
             assert selected in range(1, end_range+1)
         except ValueError:
@@ -66,9 +67,10 @@ def select_organization(dashboard):
     '''
     organizations = dashboard.organizations.getOrganizations()
     organizations.sort(key=lambda x: x['name'])
-    print('\nSelect organization:')
+    print('\nSelect an organization:\n')
     for line_num, organization in enumerate(organizations, start=1):
-        print(f'{line_num} - {organization["name"]}')
+        row = fileops.colorme((f'  {line_num} - {organization["name"]}'), "green")
+        print(row)
     selected = validate_integer_in_range(len(organizations))
     return (
         organizations[int(selected)]['id'],

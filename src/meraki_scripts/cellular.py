@@ -20,8 +20,6 @@ logging.basicConfig(
     datefmt="%m/%d/%Y %I:%M:%S %p",
 )
 
-NETWORKS_LIST = []
-
 
 def convert_network_id_to_name(networks, cellular_data):
     new_cellular_data = []
@@ -100,9 +98,18 @@ def main():
     )
     log.debug(f"The user has selected the {orgs[1]} organization")
     log.debug("Attempting to pull all uplinks for the selected organization")
-    appliances = dashboard.appliance.getOrganizationApplianceUplinkStatuses(
-        orgs[0], total_pages="all"
-    )
+    network_list = []
+    has_list = input("Do you have a file with network IDs to filter on? [y or n]: ")
+    if has_list.lower() == 'y':
+        network_file = input("Enter in the name of the file: ")
+        log.debug(f"User has selected to filter based on networks in the file {network_file}")
+        network_list = fileops.readlines_in_file(network_file)
+    try:
+        appliances = dashboard.appliance.getOrganizationApplianceUplinkStatuses(
+            orgs[0], networkIds=network_list, total_pages="all"
+        )
+    except Exception as e:
+        log.exception(e)
     log.debug(
         "All uplinks have been pulled and assigned to appliances variable"
     )
@@ -113,8 +120,9 @@ def main():
     )
     networks = merakiops.get_networks(dashboard, orgs[0])
     cellular_sites = convert_network_id_to_name(networks, cellular_uplinks)
-    print("Writing the cellular data found to 'output/cell-data.csv'")
-    fileops.writelines_to_file("output/cell-data.csv", cellular_sites)
+    output_file = fileops.colorme("output/cellular-data.csv", "blue")
+    print(f"Writing the cellular data to file {output_file}")
+    fileops.writelines_to_file("output/cellular-data.csv", cellular_sites)
     log.debug("--- The script finished successfully ---\n")
     print("\nScript completed successfully")
 

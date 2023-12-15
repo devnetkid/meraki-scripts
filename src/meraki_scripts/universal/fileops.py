@@ -75,3 +75,11 @@ def load_file(filename):
         sys.exit(f"Could not find file {filename}")
 
 
+def readlines_in_file(filename):
+        try:
+            with open(filename, "r", encoding="UTF-8") as file:
+                data = file.readlines()
+            return [item.split() for item in data]
+        except FileNotFoundError:
+            sys.exit(f"Could not find file {filename}")
+
