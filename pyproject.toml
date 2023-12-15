@@ -12,6 +12,7 @@ addresses = "meraki_scripts.addresses:main"
 networks = "meraki_scripts.networks:main"
 cellular = "meraki_scripts.cellular:main"
 uplinkstats = "meraki_scripts.uplinkstats:main"
+sort = "meraki_scripts.sort:main"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}

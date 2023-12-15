@@ -25,6 +25,8 @@ just one you may need to copy over some of the functions found there.
   <dt>uplinkstats</dt>
   <dd>Use this script to pull loss, latency, and jitter for a specified
   network.</dd>
+  <dt>sort</dt>
+  <dd>Use this script to sort data based on a regex string</dd>
 </dl>
 
 
