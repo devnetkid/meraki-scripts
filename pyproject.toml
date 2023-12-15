@@ -10,8 +10,8 @@ dynamic = ["dependencies"]
 [project.scripts]
 addresses = "meraki_scripts.addresses:main"
 networks = "meraki_scripts.networks:main"
-cellular = "meraki_scripts.celldata:main"
-uplinkstats = "meraki_scripts.cellular:main"
+cellular = "meraki_scripts.cellular:main"
+uplinkstats = "meraki_scripts.uplinkstats:main"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
