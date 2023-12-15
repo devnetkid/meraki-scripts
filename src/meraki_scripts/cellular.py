@@ -108,8 +108,12 @@ def main():
         appliances = dashboard.appliance.getOrganizationApplianceUplinkStatuses(
             orgs[0], networkIds=network_list, total_pages="all"
         )
+        mg_appliances = dashboard.cellularGateway.getOrganizationCellularGatewayUplinkStatuses(
+            orgs[0], networkIds=network_list, total_pages='all'
+        )
     except Exception as e:
         log.exception(e)
+    appliances.extend(mg_appliances)
     log.debug(
         "All uplinks have been pulled and assigned to appliances variable"
     )
