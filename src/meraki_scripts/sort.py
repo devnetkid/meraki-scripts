@@ -16,16 +16,15 @@ logging.basicConfig(filename='output/sort.log', level=logging.DEBUG,
     datefmt="%m/%d/%Y %I:%M:%S %p",
 )
 
-
 def sort_data(csv_data, column, regex):
     temp_data = []
     for line in csv_data:
         line_str = ",".join(line)
-        new_line = line_str.split(",")
-        for match in re.findall(regex, new_line[column]):
+        line = line_str.split(",")
+        for match in re.findall(regex, line[column]):
             if match:
-                new_line.append(match)
-            temp_data.append(new_line)
+                line.append(match)
+            temp_data.append(line)
     return sorted(temp_data, key=lambda row: row[-1])
 
 
@@ -42,14 +41,13 @@ def main():
     regex = re.compile(search_pattern)
     data = fileops.readlines_in_file(input_file)
     sortedlist = sort_data(data, search_column, regex)
-    mylist = []
+    temp_list = []
     for item in sortedlist:
         item.pop(-1)
         temp_str = ",".join(item)
         temp_str += "\n"
-        print(repr(temp_str))
-        mylist.append(temp_str)
-    fileops.writelines_to_file(output_file, mylist)
+        temp_list.append(temp_str)
+    fileops.writelines_to_file(output_file, temp_list)
     log.debug("--- End of script Finished successfully ---\n")
     print("Script finished successfully")
 
