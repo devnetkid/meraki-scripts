@@ -3,7 +3,7 @@
 import os
 import platform
 import sys
-
+import tomlkit
 
 def writelines_to_file(filename, filedata):
     # Write text to given path
@@ -55,6 +55,15 @@ def colorme(msg, color):
         # Defaults to white if invalid color is given
         wrapper = '\033[47m'
     return wrapper + msg + '\033[0m'
+
+
+def load_settings(settings_path):
+    try:
+        with open(settings_path, "r") as file:
+            settings = tomlkit.loads(file.read())
+    except tomlkit.exceptions.TOMLKitError as e:
+        raise ValueError(f"Error decoding TOML file: {str(e)}")
+    return settings
 
 
 def load_file(filename):

@@ -16,7 +16,8 @@ from meraki_scripts.universal import fileops, merakiops
 
 def main():
     fileops.clear_screen()
-    print(fileops.colorme("State of Utah, Meraki API", "red"))
+    settings = fileops.load_settings("input/settings.toml")
+    print(fileops.colorme(settings["title"], "red"))
     dashboard = merakiops.get_dashboard()
     org_id, org_name = merakiops.select_organization(dashboard)
     orgname = fileops.colorme(org_name, "blue")
