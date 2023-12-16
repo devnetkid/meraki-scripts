@@ -3,7 +3,6 @@ to write to the specified output file.
 
 """
 
-import csv
 import logging
 import re
 
@@ -30,12 +29,6 @@ def sort_data(csv_data, column, regex):
     return sorted(temp_data, key=lambda row: row[-1])
 
 
-def writelines_to_file(file, lines):
-    with open(file, "w") as f:
-        wr = csv.writer(f)
-        wr.writerows(lines)
-
-
 def main():
     log.debug("Starting the main function from sort.py")
     log.debug("Prompt user for input file")
@@ -49,8 +42,14 @@ def main():
     regex = re.compile(search_pattern)
     data = fileops.readlines_in_file(input_file)
     sortedlist = sort_data(data, search_column, regex)
-    print(sortedlist)
-    writelines_to_file(output_file, sortedlist)
+    mylist = []
+    for item in sortedlist:
+        item.pop(-1)
+        temp_str = ",".join(item)
+        temp_str += "\n"
+        print(repr(temp_str))
+        mylist.append(temp_str)
+    fileops.writelines_to_file(output_file, mylist)
     log.debug("--- End of script Finished successfully ---\n")
     print("Script finished successfully")
 
