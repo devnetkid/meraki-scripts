@@ -18,6 +18,7 @@ output_file = settings["uplinkstats"]["output_file"]
 
 
 def main():
+    log.debug("Script uplinkstats is starting")
     fileops.clear_screen()
     print(fileops.colorme(settings["title"], "red"))
     dashboard = merakiops.get_dashboard()

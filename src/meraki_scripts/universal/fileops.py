@@ -104,7 +104,7 @@ def setup_logging(script_name):
 
     logging.basicConfig(
         filename=logname,
-        level=logging.DEBUG,
+        level=log_level.upper(),
         format=(
             "%(asctime)2s %(filename)22s:%(lineno)6s "
             "%(levelname)11s > %(message)s"
