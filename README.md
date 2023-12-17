@@ -29,5 +29,3 @@ just one you may need to copy over some of the functions found there.
   <dd>Use this script to sort data based on a regex string</dd>
 </dl>
 
-
-Testing
