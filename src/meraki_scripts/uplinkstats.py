@@ -11,11 +11,14 @@ from meraki_scripts.universal import fileops, merakiops
 log = logging.getLogger(__name__)
 logging.basicConfig(filename="output/debug.log", level=logging.DEBUG)
 
-UPLINK = "cellular"
-IP = "8.8.8.8"
-
+settings = fileops.load_settings("input/settings.toml")
+dst_ip = settings["uplinkstats"]["destination_ip"]
+uplink = settings["uplinkstats"]["uplink_interface"]
+output_file = settings["uplinkstats"]["output_file"]
 
 def main():
+    fileops.clear_screen()
+    print(fileops.colorme(settings["title"], "red"))
     dashboard = merakiops.get_dashboard()
     orgs = merakiops.select_organization(dashboard)
     log.info(f"The selected organization is {orgs[1]}")
@@ -25,7 +28,7 @@ def main():
     log.info(f"The serial number found is {pri_mx_sn[1]}")
     try:
         response = dashboard.devices.getDeviceLossAndLatencyHistory(
-            pri_mx_sn[1], ip=IP, uplink=UPLINK
+            pri_mx_sn[1], ip=dst_ip, uplink=uplink
         )
     except Exception as e:
         print(e)
@@ -49,7 +52,7 @@ def main():
             + "\n"
         )
         lines.append(line)
-    fileops.writelines_to_file("output/stats.csv", lines)
+    fileops.writelines_to_file(output_file, lines)
 
 
 if __name__ == "__main__":
