@@ -9,12 +9,13 @@ import logging
 from meraki_scripts.universal import fileops, merakiops
 
 log = logging.getLogger(__name__)
-logging.basicConfig(filename="output/debug.log", level=logging.DEBUG)
+fileops.setup_logging("uplinkstats")
 
 settings = fileops.load_settings("input/settings.toml")
 dst_ip = settings["uplinkstats"]["destination_ip"]
 uplink = settings["uplinkstats"]["uplink_interface"]
 output_file = settings["uplinkstats"]["output_file"]
+
 
 def main():
     fileops.clear_screen()

@@ -3,7 +3,9 @@
 import os
 import platform
 import sys
+from datetime import datetime
 import tomlkit
+import logging
 
 def writelines_to_file(filename, filedata):
     # Write text to given path
@@ -92,3 +94,20 @@ def readlines_in_file(filename):
         except FileNotFoundError:
             sys.exit(f"Could not find file {filename}")
 
+
+def setup_logging(script_name):
+    settings = load_settings("input/settings.toml")
+    log_level = settings["logging"]["file_log_level"]
+    log_file = settings["logging"]["file_log_path"]
+    time_stamp = datetime.now().strftime("__%Y-%m-%d_%H-%M-%S")
+    logname = log_file + script_name + time_stamp + ".log"
+
+    logging.basicConfig(
+        filename=logname,
+        level=logging.DEBUG,
+        format=(
+            "%(asctime)2s %(filename)22s:%(lineno)6s "
+            "%(levelname)11s > %(message)s"
+        ),
+        datefmt="%m/%d/%Y %I:%M:%S %p",
+    )
