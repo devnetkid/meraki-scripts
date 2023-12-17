@@ -10,15 +10,7 @@ import logging
 from meraki_scripts.universal import fileops, merakiops
 
 log = logging.getLogger(__name__)
-logging.basicConfig(
-    filename="output/cellular.log",
-    level=logging.DEBUG,
-    format=(
-        "%(asctime)2s %(filename)22s:%(lineno)6s "
-        "%(levelname)11s > %(message)s"
-    ),
-    datefmt="%m/%d/%Y %I:%M:%S %p",
-)
+fileops.setup_logging("cellular")
 
 
 def convert_network_id_to_name(networks, cellular_data):
@@ -83,51 +75,46 @@ def find_cellular_uplinks(appliances):
 
 def main():
     log.debug("Starting the main function from cellular.py")
+    settings = fileops.load_settings("input/settings.toml")
+    output_file = settings["cellular"]["output_file"]
+    filter_list = settings["cellular"]["filter_list"]
     fileops.clear_screen()
-    welcome = fileops.colorme(
-        "Starting script to search for cellular uplinks", "blue"
-    )
-    print(welcome)
+    print(fileops.colorme(settings["title"], "blue"))
     dashboard = merakiops.get_dashboard()
     log.debug("Prompting user to select an organization")
     orgs = merakiops.select_organization(dashboard)
     org_name = fileops.colorme(orgs[1], "blue")
-    print(
-        f"Searching the selected organization {org_name} "
-        "for cellular uplinks\n"
-    )
+    print(f"Searching the selected organization {org_name} " "for cellular uplinks\n")
     log.debug(f"The user has selected the {orgs[1]} organization")
+    log.info(f"The {orgs[1]} organization has been selected")
     log.debug("Attempting to pull all uplinks for the selected organization")
     network_list = []
-    has_list = input("Do you have a file with network IDs to filter on? [y or n]: ")
-    if has_list.lower() == 'y':
-        network_file = input("Enter in the name of the file: ")
-        log.debug(f"User has selected to filter based on networks in the file {network_file}")
-        network_list = fileops.readlines_in_file(network_file)
+    if filter_list:
+        log.info(f"Filtering based on networks in the file {filter_list}")
+        network_list = fileops.readlines_in_file(filter_list)
     try:
         appliances = dashboard.appliance.getOrganizationApplianceUplinkStatuses(
             orgs[0], networkIds=network_list, total_pages="all"
         )
-        mg_appliances = dashboard.cellularGateway.getOrganizationCellularGatewayUplinkStatuses(
-            orgs[0], networkIds=network_list, total_pages='all'
+        mg_appliances = (
+            dashboard.cellularGateway.getOrganizationCellularGatewayUplinkStatuses(
+                orgs[0], networkIds=network_list, total_pages="all"
+            )
         )
     except Exception as e:
         log.exception(e)
     appliances.extend(mg_appliances)
-    log.debug(
-        "All uplinks have been pulled and assigned to appliances variable"
-    )
+    log.debug("All uplinks have been pulled and assigned to appliances variable")
     log.debug("Attempting to find all networks that have cellular uplinks")
     cellular_uplinks = find_cellular_uplinks(appliances)
-    log.debug(
-        "Using the found cellular uplinks list to extract desired cell data"
-    )
+    log.debug("Using the found cellular uplinks list to extract desired cell data")
     networks = merakiops.get_networks(dashboard, orgs[0])
     cellular_sites = convert_network_id_to_name(networks, cellular_uplinks)
-    output_file = fileops.colorme("output/cellular-data.csv", "blue")
-    print(f"Writing the cellular data to file {output_file}")
-    fileops.writelines_to_file("output/cellular-data.csv", cellular_sites)
-    log.debug("--- The script finished successfully ---\n")
+    color_output_file = fileops.colorme(output_file, "blue")
+    print(f"Writing the cellular data to file {color_output_file}")
+    log.info(f"Writing the cellular data to file {output_file}")
+    fileops.writelines_to_file(output_file, cellular_sites)
+    log.info("--- The script finished successfully ---")
     print("\nScript completed successfully")
 
 

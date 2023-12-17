@@ -65,6 +65,9 @@ def load_settings(settings_path):
             settings = tomlkit.loads(file.read())
     except tomlkit.exceptions.TOMLKitError as e:
         raise ValueError(f"Error decoding TOML file: {str(e)}")
+    except FileNotFoundError:
+        sys.exit("Couldn't find settings.toml file. "
+        "Make sure to add it to input folder in root directory")
     return settings
 
 
