@@ -6,6 +6,7 @@ CSV file includes:
 """
 
 import logging
+import sys
 
 from meraki_scripts.universal import fileops, merakiops
 
@@ -73,13 +74,68 @@ def find_cellular_uplinks(appliances):
     return cellular_uplinks
 
 
-def main():
-    log.debug("Starting the main function from cellular.py")
-    settings = fileops.load_settings("input/settings.toml")
+def process_settings():
+    # Ensure that the required settings have been setup
+    log.info("Ensuring that settings are set correctly before continuing")
+    settings = fileops.load_settings()
+    fileops.clear_screen()
+    print(fileops.colorme(settings["title"], "red"))
+    if "output_file" not in settings["cellular"]:
+        missing_key = fileops.colorme("output_file", "red")
+        log.info(
+            "Missing a required key 'output_file', "
+            "add it to settings.toml and try again"
+        )
+        sys.exit(
+            f"Missing a required key {missing_key}"
+            "\nAdd it to the settings.toml file and try again"
+        )
+    if "filter_list" not in settings["cellular"]:
+        missing_key = fileops.colorme("filter_list", "red")
+        log.info(
+            "Missing a required key 'filter_list', "
+            "add it to settings.toml and try again"
+        )
+        sys.exit(
+            f"Missing a required key {missing_key}"
+            "\nAdd it to the settings.toml file and try again"
+        )
     output_file = settings["cellular"]["output_file"]
     filter_list = settings["cellular"]["filter_list"]
+    color_output_file = fileops.colorme(output_file, "blue")
+    if filter_list:
+        color_filter_list = fileops.colorme(filter_list, "blue")
+    else:
+        color_filter_list = fileops.colorme("Not set", "blue")
+    if not output_file:
+        required = fileops.colorme("Output file is required to continue.", "red")
+        required += "\nUpdate the cellular output_file in settings.toml file"
+        log.info("Output file was not specified and is required to continue")
+        sys.exit(required)
     fileops.clear_screen()
-    print(fileops.colorme(settings["title"], "blue"))
+    print(fileops.colorme(settings["title"], "red"))
+    print("\nYou are about to pull cellular data with the following settings:")
+    print(f"\n    Filter list: {color_filter_list}")
+    print(f"    Output file: {color_output_file}")
+    choice = input("\nPress [Enter] to continue or [q] to quit: ")
+    if "q" in choice:
+        log.info("You chose not to continue")
+        sys.exit("The settings.toml file should be in the input folder")
+    return {
+        "title": settings["title"],
+        "output_file": output_file,
+        "filter_list": filter_list,
+    }
+
+
+def main():
+    settings = process_settings()
+    filter_list = settings["filter_list"]
+    output_file = settings["output_file"]
+    color_output_file = fileops.colorme(output_file, "blue")
+    fileops.clear_screen()
+    print(fileops.colorme(settings["title"], "red"))
+    log.debug("Starting the main function from cellular.py")
     dashboard = merakiops.get_dashboard()
     log.debug("Prompting user to select an organization")
     orgs = merakiops.select_organization(dashboard)
@@ -110,7 +166,6 @@ def main():
     log.debug("Using the found cellular uplinks list to extract desired cell data")
     networks = merakiops.get_networks(dashboard, orgs[0])
     cellular_sites = convert_network_id_to_name(networks, cellular_uplinks)
-    color_output_file = fileops.colorme(output_file, "blue")
     print(f"Writing the cellular data to file {color_output_file}")
     log.info(f"Writing the cellular data to file {output_file}")
     fileops.writelines_to_file(output_file, cellular_sites)

@@ -7,6 +7,7 @@ from datetime import datetime
 import tomlkit
 import logging
 
+
 def writelines_to_file(filename, filedata):
     # Write text to given path
     try:
@@ -59,7 +60,7 @@ def colorme(msg, color):
     return wrapper + msg + '\033[0m'
 
 
-def load_settings(settings_path):
+def load_settings(settings_path="input/settings.toml"):
     try:
         with open(settings_path, "r") as file:
             settings = tomlkit.loads(file.read())
@@ -67,7 +68,12 @@ def load_settings(settings_path):
         raise ValueError(f"Error decoding TOML file: {str(e)}")
     except FileNotFoundError:
         sys.exit("Couldn't find settings.toml file. "
-        "Make sure to add it to input folder in root directory")
+        "Make sure to add it to input folder in the root directory")
+    # Make sure the needed keys are there
+    required_keys = ["title", "addresses", "cellular", "uplinkstats", "logging"]
+    for key in required_keys:
+        if key not in settings:
+            sys.exit(f"Missing key {key}, please make sure all settings are set")
     return settings
 
 
@@ -102,7 +108,7 @@ def setup_logging(script_name):
     settings = load_settings("input/settings.toml")
     log_level = settings["logging"]["file_log_level"]
     log_file = settings["logging"]["file_log_path"]
-    time_stamp = datetime.now().strftime("__%Y-%m-%d_%H-%M-%S")
+    time_stamp = datetime.now().strftime("__%Y-%m-%d__%H-%M-%S")
     logname = log_file + script_name + time_stamp + ".log"
 
     logging.basicConfig(
