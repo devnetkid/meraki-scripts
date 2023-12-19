@@ -1,4 +1,16 @@
-"""Updates an existing group policy with additional changes"""
+"""Updates an existing group policy with additional changes
+
+Notes: Make sure to update the settings.toml file with
+    network_list: This is a file containing network ID, network name
+    new_group_policy: This is the json formated file with policy changes
+    existing_name: This is the current name of the group policy
+
+Meraki API
+https://developer.cisco.com/meraki/api/update-network-group-policy/
+
+TODO: Add a progress bar
+
+"""
 
 import logging
 import sys
@@ -33,22 +45,23 @@ def main():
     if "q" in choice:
         log.info("You chose not to continue")
         sys.exit()
-    networks = fileops.new_readlines(networks_file)
-    policy = fileops.load_json_file(group_policies)
+    networks = fileops.load_file(networks_file)
+    policy = fileops.load_file(group_policies, "json")
+    print(networks)
+    print(policy)
     dashboard = merakiops.get_dashboard()
     for network in networks:
-        if network.startswith('L_') or network.startswith('N_'):
-            network_id = network.split(',')[0]
-            network_name = network.split(',')[1]
+        if network.startswith("L_") or network.startswith("N_"):
+            network_id = network.split(",")[0]
+            network_name = network.split(",")[1]
             log.info(f"Checking {network_name.strip()} for existing policy")
             response = dashboard.networks.getNetworkGroupPolicies(network_id)
             found_policy = False
             for each in response:
-                if each['name'] == existing_name:
-                    group_policy_id = each['groupPolicyId']
+                if each["name"] == existing_name:
+                    group_policy_id = each["groupPolicyId"]
                     dashboard.networks.updateNetworkGroupPolicy(
-                        network_id, group_policy_id, 
-                        contentFiltering=policy
+                        network_id, group_policy_id, contentFiltering=policy
                     )
                     log.info(f"Group policy ID {group_policy_id} updated")
                     found_policy = True
@@ -56,5 +69,5 @@ def main():
                 log.info(f"Did not find a policy with name {existing_name}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

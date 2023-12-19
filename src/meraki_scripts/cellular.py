@@ -147,7 +147,9 @@ def main():
     network_list = []
     if filter_list:
         log.info(f"Filtering based on networks in the file {filter_list}")
-        network_list = fileops.readlines_in_file(filter_list)
+        netid_list = fileops.load_file(filter_list)
+        for each_network in netid_list:
+            network_list.append(each_network.split(",")[0])
     # Research possibly replacing current cellular uplink status checks with just this one
     # dashboard.organizations.getOrganizationUplinksStatuses(orgs[0], total_pages='all')
     try:

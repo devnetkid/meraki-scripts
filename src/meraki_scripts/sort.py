@@ -9,18 +9,12 @@ import re
 from meraki_scripts.universal import fileops
 
 log = logging.getLogger(__name__)
-logging.basicConfig(filename='output/sort.log', level=logging.DEBUG,
-    format=(
-        "%(asctime)2s %(filename)22s:%(lineno)6s "
-        "%(levelname)11s > %(message)s"),
-    datefmt="%m/%d/%Y %I:%M:%S %p",
-)
+fileops.setup_logging("sort")
 
 def sort_data(csv_data, column, regex):
     temp_data = []
     for line in csv_data:
-        line_str = ",".join(line)
-        line = line_str.split(",")
+        line = line.split(",")
         for match in re.findall(regex, line[column]):
             if match:
                 line.append(match)
@@ -29,26 +23,23 @@ def sort_data(csv_data, column, regex):
 
 
 def main():
-    log.debug("Starting the main function from sort.py")
-    log.debug("Prompt user for input file")
-    input_file = input("Enter the location/file for the input data: ")
-    log.debug("Prompt user for output file")
-    output_file = input("Enter the location/file for the output data: ")
-    log.debug("Prompt user for column to search file")
-    search_column = int(input("Enter the column to sort by: "))
-    log.debug("Prompt user for regex search pattern")
-    search_pattern = input("Enter the regex search pattern: ")
+    fileops.clear_screen()
+    log.info("Starting script sort")
+    settings = fileops.load_settings("input/settings.toml")
+    input_file = settings["sort"]["input_file"]
+    output_file = settings["sort"]["output_file"]
+    search_column = settings["sort"]["search_column"]
+    search_pattern = settings["sort"]["regex_pattern"]
     regex = re.compile(search_pattern)
-    data = fileops.readlines_in_file(input_file)
+    data = fileops.load_file(input_file)
     sortedlist = sort_data(data, search_column, regex)
     temp_list = []
     for item in sortedlist:
         item.pop(-1)
         temp_str = ",".join(item)
-        temp_str += "\n"
         temp_list.append(temp_str)
     fileops.writelines_to_file(output_file, temp_list)
-    log.debug("--- End of script Finished successfully ---\n")
+    log.info("Script Finished successfully")
     print("Script finished successfully")
 
 
