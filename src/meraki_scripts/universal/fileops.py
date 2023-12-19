@@ -1,11 +1,17 @@
 '''Common file operations'''
 
+import json
 import os
 import platform
 import sys
 from datetime import datetime
 import tomlkit
 import logging
+
+
+def load_json_file(filename):
+    with open(filename) as json_data:
+        return json.load(json_data)
 
 
 def writelines_to_file(filename, filedata):
@@ -89,7 +95,7 @@ def load_file(filename):
 
     try:
         with open(filename, "r", encoding="UTF-8") as file:
-            data = file.read().replace('\n','')
+            data = file.read()
         return data
     except FileNotFoundError:
         sys.exit(f"Could not find file {filename}")
@@ -102,6 +108,14 @@ def readlines_in_file(filename):
             return [item.split() for item in data]
         except FileNotFoundError:
             sys.exit(f"Could not find file {filename}")
+
+
+def new_readlines(filename):
+    try:
+        with open(filename, "r", encoding="UTF-8") as file:
+            return file.readlines()
+    except FileNotFoundError:
+        sys.exit(f"Could not find file {filename}")
 
 
 def setup_logging(script_name):

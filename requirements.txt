@@ -1,2 +1,2 @@
 meraki==1.39.1
-tomlkit=0.12.3
+tomlkit==0.12.3
