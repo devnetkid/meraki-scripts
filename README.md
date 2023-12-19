@@ -43,6 +43,7 @@ output_file = "output/cellular.csv"
 [updategp]
 network_list = "input/networks.txt"
 new_group_policy = "input/new_policy.json"
+existing_name = 'my_group_policy'
 
 # uplinkstats
 [uplinkstats]
