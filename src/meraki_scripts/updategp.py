@@ -8,8 +8,6 @@ Notes: Make sure to update the settings.toml file with
 Meraki API
 https://developer.cisco.com/meraki/api/update-network-group-policy/
 
-TODO: Add a progress bar
-
 """
 
 import logging
@@ -42,21 +40,25 @@ def main():
     print(f"  If there is an existing policy {color_existing}")
     # Get confirmation before continuing
     choice = input("\nPress [Enter] to continue or [q] to quit: ")
+    print()
     if "q" in choice:
         log.info("You chose not to continue")
         sys.exit()
     networks = fileops.load_file(networks_file)
     policy = fileops.load_file(group_policies, "json")
-    print(networks)
-    print(policy)
+    # Loop through each network updating the specified group policy
     dashboard = merakiops.get_dashboard()
+    done = 0
+    total = len(networks)
     for network in networks:
+        bar = fileops.progress_bar(done, total)
+        print(bar, end="", flush=True)
         if network.startswith("L_") or network.startswith("N_"):
             network_id = network.split(",")[0]
             network_name = network.split(",")[1]
             log.info(f"Checking {network_name.strip()} for existing policy")
             response = dashboard.networks.getNetworkGroupPolicies(network_id)
-            found_policy = False
+            policy_found = False
             for each in response:
                 if each["name"] == existing_name:
                     group_policy_id = each["groupPolicyId"]
@@ -64,9 +66,15 @@ def main():
                         network_id, group_policy_id, contentFiltering=policy
                     )
                     log.info(f"Group policy ID {group_policy_id} updated")
-                    found_policy = True
-            if not found_policy:
+                    policy_found = True
+            if not policy_found:
                 log.info(f"Did not find a policy with name {existing_name}")
+        done += 1
+        print("\b" * len(bar), end="", flush=True)
+    bar = fileops.progress_bar(done, total)
+    print(bar, end="", flush=True)
+    log.info("Script completed successfully.")
+    print(f"\n\nScript completed successfully. See output/logs for details")
 
 
 if __name__ == "__main__":
