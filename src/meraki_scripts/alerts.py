@@ -48,8 +48,8 @@ def main():
     fileops.clear_screen()
     print(fileops.colorme(settings["title"], "red"))
     print(f"\n  For the list of networks from {networks_color}")
-    print(f"\n  Update the default alert settings from {alert_defaults_color}")
-    print(f"\n  Update the alert settings from {alerts_color}")
+    print(f"  Update the default alert settings from {alert_defaults_color}")
+    print(f"  Update the alert settings from {alerts_color}")
 
     # Get confirmation before continuing
     choice = input("\nPress [Enter] to continue or [q] to quit: ")
@@ -59,15 +59,15 @@ def main():
         sys.exit()
 
     # Update network alerts
+    log.info("Creating an instance of the Meraki dashboard")
     dashboard = merakiops.get_dashboard()
     for network in networks:
         if network.startswith("L_") or network.startswith("N_"):
-            network_id = network.split(",")[0]
-            print(network.split(",")[1])
+            network_id, network_name = network.split(",")
+            log.info(f"Updating alert settings for the {network_name.strip()} network")
             response = dashboard.networks.updateNetworkAlertsSettings(
                 network_id, defaultDestinations=alert_defaults_json, alerts=alerts_json
             )
-            print(response)
 
 
 if __name__ == "__main__":

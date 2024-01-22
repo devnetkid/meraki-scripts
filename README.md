@@ -34,6 +34,12 @@ title = "Your Company Name, Meraki Operations"
 [addresses]
 output_file = "output/addresses.txt"
 
+# alerts
+[alerts]
+network_list = "input/alerts_networks.txt"
+default_destinations = "input/default_alerts.json"
+alerts = "input/alerts.json"
+
 # cellular
 [cellular]
 filter_list = ""
@@ -73,6 +79,9 @@ log_path = 'output/logs'
   <dt>addresses</dt>
   <dd>When you run this the dashboard returns all found addresses as 
     defined in the Address field on an MX or MZ device.</dd>
+  <dt>alerts</dt>
+  <dd>If you need to update emails, snmp, web hooks etc... this script
+    allows you to do that.
   <dt>networks</dt>
   <dd>This script will pull all network ID and names found then write 
     them in a comma separated format.</dd>
