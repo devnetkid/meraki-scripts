@@ -36,7 +36,9 @@ def load_file(filename, rtype="readlines"):
             elif rtype == "toml":
                 return tomlkit.load(file)
             else:
-                sys.exit(f"Invalid return type requested. Change {rtype} to valid value")
+                sys.exit(
+                    f"Invalid return type requested. Change {rtype} to valid value"
+                )
     except FileNotFoundError:
         sys.exit(f"Could not find file {filename}")
 
@@ -97,12 +99,13 @@ def load_settings(settings_path="input/settings.toml"):
     settings = load_file(settings_path, "toml")
     # Make sure the needed keys are there
     required_keys = [
-        "title", 
-        "addresses", 
-        "cellular", 
-        "sort", 
-        "uplinkstats", 
-        "logging"
+        "title",
+        "addresses",
+        "alerts",
+        "cellular",
+        "sort",
+        "uplinkstats",
+        "logging",
     ]
     for key in required_keys:
         if key not in settings:

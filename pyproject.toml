@@ -9,6 +9,7 @@ dynamic = ["dependencies"]
 
 [project.scripts]
 addresses = "meraki_scripts.addresses:main"
+alerts = "meraki_scripts.alerts:main"
 networks = "meraki_scripts.networks:main"
 cellular = "meraki_scripts.cellular:main"
 updategp = "meraki_scripts.updategp:main"
@@ -16,7 +17,7 @@ uplinkstats = "meraki_scripts.uplinkstats:main"
 sort = "meraki_scripts.sort:main"
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+dependencies = { file = ["requirements.txt"] }
 
 [tool.flake8]
 max-line-length = 99
