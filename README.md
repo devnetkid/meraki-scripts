@@ -82,7 +82,9 @@ log_path = 'output/logs'
     defined in the Address field on an MX or MZ device.</dd>
   <dt>alerts</dt>
   <dd>If you need to update emails, snmp, web hooks etc... this script
-    allows you to do that.
+    allows you to do that.</dd>
+  <dt>deletegp</dt>
+  <dd>This script will delete all group policies for the specified network</dd>
   <dt>networks</dt>
   <dd>This script will pull all network ID and names found then write 
     them in a comma separated format.</dd>

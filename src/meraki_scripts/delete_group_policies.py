@@ -10,9 +10,9 @@ fileops.setup_logging("delete_group_policies")
 
 
 def main():
-    """Handles the menu and setup to get desired network"""
+    """Handles the menu and user interaction for deleting group policies"""
 
-    # Display menu and prompt for the selection of organization
+    # Display menu and prompt for the selection of an organization
     fileops.clear_screen()
     settings = fileops.load_settings("input/settings.toml")
     log.debug("The settings have been loaded from input/settings.toml")
@@ -29,8 +29,8 @@ def main():
     net_id, net_name = merakiops.select_network(dashboard, org_id)
     netname = fileops.colorme(net_name, "blue")
     netid = fileops.colorme(net_id, "blue")
-    log.info(f'The "{net_name}" organization with ID {net_id} has been selected')
-    print(f"The {netname} organization with ID {netid} has been selected\n")
+    log.info(f'The "{net_name}" network with ID {net_id} has been selected')
+    print(f"The {netname} network with ID {netid} has been selected\n")
 
     # Display WARNING message giving user a chance to back out
     warn = fileops.colorme("WARNING: ", "red")
@@ -44,8 +44,8 @@ def main():
     # Delete all group policies for the specified network
     print("Deleting group policies")
     merakiops.delete_group_policies(dashboard, net_id)
-    log.info(f"Group policies for {net_name} have all been deleted")
-    print(f"Group policies for {net_name} have all been deleted")
+    log.info(f"The group policies for {net_name} have all been deleted")
+    print(f"The group policies for {net_name} have all been deleted")
 
 
 if __name__ == "__main__":
