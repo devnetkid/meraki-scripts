@@ -1,4 +1,4 @@
-'''Frequently used functions for accessing the Meraki dashboard'''
+"""Frequently used functions for accessing the Meraki dashboard"""
 
 import os
 import sys
@@ -6,6 +6,7 @@ import sys
 import meraki
 
 from meraki_scripts.universal import fileops
+
 
 def get_dashboard(key=None, print_console=False, output_log=False):
     """Instantiate the Meraki dashboard
@@ -33,7 +34,8 @@ def get_dashboard(key=None, print_console=False, output_log=False):
     if "MERAKI_DASHBOARD_API_KEY" in os.environ:
         try:
             return meraki.DashboardAPI(
-                output_log=False, print_console=False, suppress_logging=True)
+                output_log=False, print_console=False, suppress_logging=True
+            )
         except AttributeError as e:
             sys.exit("Make sure meraki library is installed. Try `pip install meraki`")
 
@@ -43,10 +45,8 @@ def get_dashboard(key=None, print_console=False, output_log=False):
 def validate_integer_in_range(end_range):
     while True:
         try:
-            selected = int(
-                input("\nOption >> ")
-            )
-            assert selected in range(1, end_range+1)
+            selected = int(input("\nOption >> "))
+            assert selected in range(1, end_range + 1)
         except ValueError:
             print("\tThat is not an integer!\n")
         except AssertionError:
@@ -54,27 +54,27 @@ def validate_integer_in_range(end_range):
         else:
             break
     print()
-    return selected-1
+    return selected - 1
 
 
 def select_organization(dashboard):
-    '''Lists all the organizations and prompts the user to select one
-    
+    """Lists all the organizations and prompts the user to select one
+
     Args:
         dashboard (object): An instance of the Meraki dashboard
     Returns:
         A tuple containing organization ID and name
-    '''
+    """
     organizations = dashboard.organizations.getOrganizations()
-    organizations.sort(key=lambda x: x['name'])
-    print('\nSelect an organization:\n')
+    organizations.sort(key=lambda x: x["name"])
+    print("\nSelect an organization:\n")
     for line_num, organization in enumerate(organizations, start=1):
         row = fileops.colorme((f'  {line_num} - {organization["name"]}'), "green")
         print(row)
     selected = validate_integer_in_range(len(organizations))
     return (
-        organizations[int(selected)]['id'],
-        organizations[int(selected)]['name'],
+        organizations[int(selected)]["id"],
+        organizations[int(selected)]["name"],
     )
 
 
@@ -94,10 +94,12 @@ def select_network(dashboard, org, lines_to_display=25):
     networks = dashboard.organizations.getOrganizationNetworks(org)
 
     while not network_list:
-        search_name = input("Enter a name to search for or leave blank for all networks: ")
+        search_name = input(
+            "Enter a name to search for or leave blank for all networks: "
+        )
         if search_name:
             for network in networks:
-                if search_name.lower() in network['name'].lower():
+                if search_name.lower() in network["name"].lower():
                     network_list.append(network)
         else:
             network_list = networks
@@ -117,7 +119,7 @@ def select_network(dashboard, org, lines_to_display=25):
             print(f"No networks found matching {search_name}")
 
     selected = validate_integer_in_range(len(network_list))
-    return ([network_list[int(selected)]["id"], network_list[int(selected)]["name"]])
+    return [network_list[int(selected)]["id"], network_list[int(selected)]["name"]]
 
 
 def get_networks(dashboard, org):
@@ -143,3 +145,16 @@ def get_mx_serial_number(dashboard, net_id):
         print(f"reason = {e.reason}")
         print(f"error = {e.message}")
 
+
+def delete_group_policies(dashboard, net_id):
+    """Grab all group policies for a network ID and delete them"""
+
+    # Return a list of all group policies for the given network
+    response = dashboard.networks.getNetworkGroupPolicies(net_id)
+
+    # Loop through each group policy to get the policy ID
+    for group_policy in response:
+        group_policy_id = group_policy["groupPolicyId"]
+
+        # Delete the found group policy
+        dashboard.networks.deleteNetworkGroupPolicy(net_id, group_policy_id)

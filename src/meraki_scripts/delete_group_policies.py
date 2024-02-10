@@ -43,6 +43,9 @@ def main():
 
     # Delete all group policies for the specified network
     print("Deleting group policies")
+    merakiops.delete_group_policies(dashboard, net_id)
+    log.info(f"Group policies for {net_name} have all been deleted")
+    print(f"Group policies for {net_name} have all been deleted")
 
 
 if __name__ == "__main__":
