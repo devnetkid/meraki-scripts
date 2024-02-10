@@ -13,8 +13,9 @@ just one you may need to copy over some of the functions found there.
 ## Instructions
 
 1. Clone the code for meraki-scripts
-2. In the root folder create two folders called input and output
-3. In the output folder create another folder called logs
+2. Install required librarys `pip install -r requirements.txt`
+3. In the root folder create two folders called input and output
+4. In the output folder create another folder called logs
 
 ### Example of settings.toml file
 
