@@ -10,6 +10,7 @@ dynamic = ["dependencies"]
 [project.scripts]
 addresses = "meraki_scripts.addresses:main"
 alerts = "meraki_scripts.alerts:main"
+deletegp = "meraki_scripts.delete_group_policies:main"
 networks = "meraki_scripts.networks:main"
 cellular = "meraki_scripts.cellular:main"
 updategp = "meraki_scripts.updategp:main"

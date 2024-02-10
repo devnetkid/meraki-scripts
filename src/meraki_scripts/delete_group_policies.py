@@ -1,0 +1,49 @@
+"""Deletes all group policies for the specified network"""
+
+import logging
+import sys
+
+from meraki_scripts.universal import fileops, merakiops
+
+log = logging.getLogger(__name__)
+fileops.setup_logging("delete_group_policies")
+
+
+def main():
+    """Handles the menu and setup to get desired network"""
+
+    # Display menu and prompt for the selection of organization
+    fileops.clear_screen()
+    settings = fileops.load_settings("input/settings.toml")
+    log.debug("The settings have been loaded from input/settings.toml")
+    print(fileops.colorme(settings["title"], "red"))
+    log.debug("Instantiating an instance of the Meraki dashboard")
+    dashboard = merakiops.get_dashboard()
+    org_id, org_name = merakiops.select_organization(dashboard)
+    orgname = fileops.colorme(org_name, "blue")
+    orgid = fileops.colorme(org_id, "blue")
+    log.info(f'The "{org_name}" organization with ID {org_id} has been selected')
+    print(f"The {orgname} organization with ID {orgid} has been selected\n")
+
+    # Select a network from which to delete all group policies
+    net_id, net_name = merakiops.select_network(dashboard, org_id)
+    netname = fileops.colorme(net_name, "blue")
+    netid = fileops.colorme(net_id, "blue")
+    log.info(f'The "{net_name}" organization with ID {net_id} has been selected')
+    print(f"The {netname} organization with ID {netid} has been selected\n")
+
+    # Display WARNING message giving user a chance to back out
+    warn = fileops.colorme("WARNING: ", "red")
+    print(f"{warn}You are about to make changes to the network that cannot be undone.")
+    choice = input("\nType yes to continue or no to quit [no]: ")
+    print()
+    if "yes" not in choice:
+        log.info("You chose not to continue")
+        sys.exit()
+
+    # Delete all group policies for the specified network
+    print("Deleting group policies")
+
+
+if __name__ == "__main__":
+    main()

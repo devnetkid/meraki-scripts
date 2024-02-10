@@ -89,12 +89,12 @@ log_path = 'output/logs'
   <dt>cellular</dt>
   <dd>Use this script to pull cellular data. Includes: Site, Model,
     Status, Connection Type, Signal Type, APN, ICCID, RSRP, RSRQ</dd>
+  <dt>sort</dt>
+  <dd>Use this script to sort data based on a regex string</dd>
   <dt>updategp</dt>
   <dd>Use this script to modify a group policy for a specified list
   of networks.</dd>
   <dt>uplinkstats</dt>
   <dd>Use this script to pull loss, latency, and jitter for a specified
   network.</dd>
-  <dt>sort</dt>
-  <dd>Use this script to sort data based on a regex string</dd>
 </dl>
