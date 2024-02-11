@@ -1,6 +1,4 @@
-"""Get the uplink and vlan settings for a particular network
-
-"""
+"""Get the uplink settings for a particular network"""
 
 import logging
 
