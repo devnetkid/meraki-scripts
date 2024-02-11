@@ -43,11 +43,16 @@ def load_file(filename, rtype="readlines"):
         sys.exit(f"Could not find file {filename}")
 
 
-def writelines_to_file(filename, filedata):
+def writelines_to_file(filename, filedata, wtype="writelines"):
     # Write text to given path
     try:
         with open(filename, "w", encoding="utf-8") as file_data:
-            file_data.writelines(filedata)
+            if wtype == "writelines":
+                file_data.writelines(filedata)
+            elif wtype == "json":
+                file_data.write(json.dumps(filedata))
+            else:
+                sys.exit("Invalid write type provided")
     except FileNotFoundError:
         sys.exit("Error opening file")
 

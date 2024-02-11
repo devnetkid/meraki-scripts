@@ -146,6 +146,48 @@ def get_mx_serial_number(dashboard, net_id):
         print(f"error = {e.message}")
 
 
+def get_mx_uplink_information(dashboard, net_id):
+    """Build a list of uplink information for MX(s) in given network"""
+
+    # Check if given network has a spare MX
+    try:
+        mx_appliance = dashboard.appliance.getNetworkApplianceWarmSpare(net_id)
+    except meraki.APIError as api_error:
+        sys.exit(api_error.message)
+
+    # Extract primary and spare serial numbers
+    primary_mx_sn = mx_appliance["primarySerial"] or None
+    spare_mx_sn = mx_appliance["spareSerial"] or None
+
+    # If uplink has wan1 and/or wan2 grab info
+    uplink_info = []
+    if mx_appliance.get("wan1"):
+        uplink_info.append({"wan1": mx_appliance["wan1"]})
+    if mx_appliance.get("wan2"):
+        uplink_info.append({"wan2": mx_appliance["wan2"]})
+
+    # Pull uplink info for serial number
+    if primary_mx_sn:
+        try:
+            pri_wan_info = dashboard.appliance.getDeviceApplianceUplinksSettings(
+                primary_mx_sn
+            )
+            uplink_info.append({"primary_mx": pri_wan_info})
+        except meraki.APIError as api_error:
+            sys.exit(api_error.message)
+
+    if spare_mx_sn:
+        try:
+            spare_wan_info = dashboard.appliance.getDeviceApplianceUplinksSettings(
+                spare_mx_sn
+            )
+            uplink_info.append({"spare_mx": spare_wan_info})
+        except meraki.APIError as api_error:
+            sys.exit(api_error.message)
+
+    return uplink_info
+
+
 def delete_group_policies(dashboard, net_id):
     """Grab all group policies for a network ID and delete them"""
 
