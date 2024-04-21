@@ -10,7 +10,7 @@ dynamic = ["dependencies"]
 [project.scripts]
 addresses = "meraki_scripts.addresses:main"
 alerts = "meraki_scripts.alerts:main"
-copygp = "meraki_scripts.copy_group_policies:main"
+copygp = "meraki_scripts.copygp:main"
 deletegp = "meraki_scripts.delete_group_policies:main"
 mxuplink = "meraki_scripts.mx_uplink:main"
 networks = "meraki_scripts.networks:main"
