@@ -200,3 +200,19 @@ def delete_group_policies(dashboard, net_id):
 
         # Delete the found group policy
         dashboard.networks.deleteNetworkGroupPolicy(net_id, group_policy_id)
+
+
+def copy_group_policies(dashboard, src_net_id, policy_list, dst_list):
+    """Copy policies from source network to destination network"""
+
+    # Ensure that the policy_list provided is part of the src_net_id
+    try:
+        group_policies = dashboard.networks.getNetworkGroupPolicies(src_net_id)
+    except Exception as e:
+        print(str(e))
+        sys.exit()
+
+    for policy in policy_list:
+        if policy != group_policies["name"]:
+            sys.exit(f"The policy {policy} provided in settings is invalid")
+            

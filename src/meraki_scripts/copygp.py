@@ -39,6 +39,7 @@ def main():
     color_networks = fileops.colorme(destinations, "blue")
     log.info(f"Loading destinations network file {destinations}")
     print(f"  To the destinations listed in network file {color_networks}")
+    destination_networks = fileops.load_file(destinations)
 
     # Verify settings are correct before continuing
     choice = input("\nPress [Enter] to continue or [q] to quit: ")
@@ -46,6 +47,10 @@ def main():
     if "q" in choice:
         log.info("You chose not to continue")
         sys.exit()
+
+    # Copy group policies
+    dashboard = merakiops.get_dashboard()
+    merakiops.copy_group_policies(dashboard, source_net_id, policy_list, destination_networks)
 
 
 if __name__ == "__main__":
