@@ -8,6 +8,7 @@ version = "0.0.1"
 dynamic = ["dependencies"]
 
 [project.scripts]
+apicalls = "meraki_scripts.apicalls:main"
 addresses = "meraki_scripts.addresses:main"
 alerts = "meraki_scripts.alerts:main"
 copygp = "meraki_scripts.copygp:main"
