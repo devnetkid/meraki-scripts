@@ -1,6 +1,7 @@
 """Create a file listing all the networks in an organization"""
 
 import logging
+import sys
 
 from meraki_scripts.universal import fileops, merakiops
 
@@ -19,7 +20,11 @@ def main():
     out_file = "output/" + org_name + "_networks.txt"
     color_output = fileops.colorme(out_file, "blue")
     log.info(f"Collecting list of networks and writing them to '{out_file}'")
-    networks = merakiops.get_networks(dashboard, org_id)
+    # Handle 429 or other dashboard errors
+    try:
+        networks = merakiops.get_networks(dashboard, org_id)
+    except:
+        sys.exit()
     network_list = []
     for network in networks:
         new_line = network["id"] + "," + network["name"] + "\n"
