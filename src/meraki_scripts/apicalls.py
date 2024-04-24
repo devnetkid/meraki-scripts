@@ -1,4 +1,7 @@
-"""Script to monitor API calls per second"""
+"""Script to monitor API calls per second
+
+https://developer.cisco.com/meraki/api-v1/get-organization-api-requests/
+"""
 
 import logging
 
@@ -22,8 +25,9 @@ def main():
     log.info(f'The "{org_name}" organization with ID {org_id} has been selected')
     print(f"The {orgname} organization with ID {orgid} has been selected\n")
     output_file = settings["apicalls"]["output_file"]
+    # If getting 429 errors constantly, the key is the timespan parameter
     response = dashboard.organizations.getOrganizationApiRequests(
-        org_id
+        org_id, timespan="300"
     )
     fileops.writelines_to_file(output_file, response, "json")
 
