@@ -15,6 +15,7 @@ fileops.setup_logging("copygp")
 
 
 def main():
+    # Initialize and print title
     settings = fileops.load_settings()
     fileops.clear_screen()
     print(fileops.colorme(settings["title"], "red"))
