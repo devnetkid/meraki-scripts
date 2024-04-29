@@ -202,14 +202,14 @@ def delete_group_policies(dashboard, net_id):
         dashboard.networks.deleteNetworkGroupPolicy(net_id, group_policy_id)
 
 
-def verify_group_policy_exists(policy, group_policies):
+def group_policy_exists(policy, group_policies):
     """For a given policy, check group policies for a match"""
 
     for group_policy in group_policies:
         if group_policy["name"] == policy:
-            return True
+            return group_policy
     
-    return False
+    return ""
 
 
 def copy_group_policies(dashboard, src_net_id, policy_list, dst_list):
@@ -218,12 +218,39 @@ def copy_group_policies(dashboard, src_net_id, policy_list, dst_list):
     # Ensure that the policy_list provided is part of the src_net_id
     try:
         group_policies = dashboard.networks.getNetworkGroupPolicies(src_net_id)
-        print(group_policies)
     except Exception as e:
         print(str(e))
         sys.exit()
 
     for policy in policy_list:
-        if not verify_group_policy_exists(policy, group_policies):
+        policy_source = group_policy_exists(policy, group_policies)
+        if not policy_source: 
             sys.exit(f"The specified policy {policy} was not found in {src_net_id}")
             
+        # Copy specified policies to destination networks
+        print(policy_source)
+        name = policy_source.get("name", "")
+        splash_settings = policy_source.get("splashAuthSettings", "") 
+        scheduling = policy_source.get("scheduling", {})
+        bandwidth = policy_source.get("bandwidth", {})
+        firewall = policy_source.get("firewallAndTrafficShaping", {})
+        content_filtering = policy_source.get("contentFiltering", {})
+        vlan_tagging = policy_source.get("vlanTagging", {})
+        bonjour = policy_source.get("bonjourForwarding", {})
+
+        # Loop through destination networks
+        for network in dst_list:
+            netinfo = network.split(',')
+            net_id = netinfo[0]
+            net_name = netinfo[1]
+
+            dashboard.networks.createNetworkGroupPolicy(
+                net_id, name, 
+                scheduling=scheduling,
+                bandwidth=bandwidth,
+                firewallAndTrafficShaping=firewall,
+                contentFiltering=content_filtering,
+                splashAuthSettings=splash_settings, 
+                vlanTagging=vlan_tagging,
+                bonjourForwarding=bonjour
+            )
