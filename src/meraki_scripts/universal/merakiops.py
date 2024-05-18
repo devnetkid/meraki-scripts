@@ -19,6 +19,12 @@ def get_dashboard(key=None, print_console=False, output_log=False):
     Returns:
         DashboardAPI
     """
+
+    # Load settings and check for api key
+    settings = fileops.load_settings()
+    if settings["meraki"]["api_key"]:
+        key = settings["meraki"]["api_key"]
+
     # TODO: look into log_file_prefix=os.path.basename(__file__)
     if key:
         try:

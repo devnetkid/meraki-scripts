@@ -1,0 +1,68 @@
+# template for settings.toml
+# settings.toml
+
+title = ""
+
+# alerts
+[alerts]
+network_list = ""
+default_destinations = ""
+alerts = ""
+
+# addresses
+[addresses]
+output_file = ""
+
+# apicalls
+[apicalls]
+output_file = ""
+
+# cellular
+[cellular]
+filter_list = ""
+output_file = ""
+
+# copygp - copy group policies
+[copygp]
+source_network = ""
+copy_policies = [""]
+destination_networks = ""
+
+# delete group policies in a network
+[deletegp]
+network_list = ""
+
+# sort
+[sort]
+input_file = ""
+output_file = ""
+search_column = 1
+regex_pattern = ""
+
+# updategp
+[updategp]
+network_list = ""
+new_group_policy = ""
+existing_name = ""
+
+# uplinkstats
+[uplinkstats]
+uplink_interface = ""
+destination_ip = ""
+output_file = ""
+
+# Script level logging
+[logging]
+file_log_level = ""
+file_log_path = ""
+
+# Meraki library settings
+[meraki]
+api_key = false
+api_key_environment_variable = "MERAKI_DASHBOARD_API_KEY"
+suppress_logging = true
+print_to_console = false
+output_log = false
+log_file_prefix = "meraki_api_"
+log_path = "output/logs"
+

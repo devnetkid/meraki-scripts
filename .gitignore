@@ -161,6 +161,12 @@ cython_debug/
 
 # custom
 output/
-input/
+input/*
+!input/template.toml
 .DS_Store
+
+# Ignore vim files:
+*~
+*.swp
+*.swo
 
