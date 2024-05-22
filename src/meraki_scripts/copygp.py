@@ -49,9 +49,36 @@ def main():
         log.info("You chose not to continue")
         sys.exit()
 
-    # Copy group policies
+    # Create an instance of the dashboard
     dashboard = merakiops.get_dashboard()
-    merakiops.copy_group_policies(dashboard, source_net_id, policy_list, destination_networks)
+    # Verify that the source policy exists and load it
+    source_policy = merakiops.get_source_policy(dashboard, source_net_id, policy_list)
+    # Copy policy to destination networks
+    done = 0
+    total = len(destination_networks)
+    for network in destination_networks:
+        bar = fileops.progress_bar(done, total)
+        print(bar, end="", flush=True)
+        netinfo = network.split(",")
+        net_id = netinfo[0]
+        net_name = netinfo[1].strip()
+        log.info(f"Attempting to copy policy to {net_name}")
+
+        try:
+            dashboard.networks.createNetworkGroupPolicy(
+                net_id, policy_list[0],
+                firewallAndTrafficShaping=source_policy
+            )
+        except Exception as e:
+            log.info(f"Failed to copy policy to {net_name}")
+            log.info(str(e))
+        done += 1
+        print("\b" * len(bar), end="", flush=True)
+
+    bar = fileops.progress_bar(done, total)
+    print(bar, end="", flush=True)
+    log.info("Script completed successfully")
+    print("\n\nScript completed successfully. See output/logs for details")
 
 
 if __name__ == "__main__":

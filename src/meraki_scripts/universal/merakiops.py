@@ -233,8 +233,7 @@ def copy_group_policies(dashboard, src_net_id, policy_list, dst_list):
         if not policy_source: 
             sys.exit(f"The specified policy {policy} was not found in {src_net_id}")
             
-        # Copy specified policies to destination networks
-        print(policy_source)
+        # Load settings from source policy 
         name = policy_source.get("name", "")
         splash_settings = policy_source.get("splashAuthSettings", "") 
         scheduling = policy_source.get("scheduling", {})
@@ -244,12 +243,13 @@ def copy_group_policies(dashboard, src_net_id, policy_list, dst_list):
         vlan_tagging = policy_source.get("vlanTagging", {})
         bonjour = policy_source.get("bonjourForwarding", {})
 
-        # Loop through destination networks
+        # Loop through destination networks addding the policy
         for network in dst_list:
             netinfo = network.split(',')
             net_id = netinfo[0]
             net_name = netinfo[1]
 
+            
             dashboard.networks.createNetworkGroupPolicy(
                 net_id, name, 
                 scheduling=scheduling,
@@ -260,3 +260,29 @@ def copy_group_policies(dashboard, src_net_id, policy_list, dst_list):
                 vlanTagging=vlan_tagging,
                 bonjourForwarding=bonjour
             )
+
+
+def get_source_policy(dashboard, src_net_id, policy_list):
+    # Ensure that the policy_list provided is part of the src_net_id
+    try:
+        group_policies = dashboard.networks.getNetworkGroupPolicies(src_net_id)
+    except Exception as e:
+        print(str(e))
+        sys.exit()
+  
+    for policy in policy_list:
+        policy_source = group_policy_exists(policy, group_policies)
+        if not policy_source: 
+            sys.exit(f"The specified policy {policy} was not found in {src_net_id}")
+            
+        # Load settings from source policy 
+        name = policy_source.get("name", "")
+        splash_settings = policy_source.get("splashAuthSettings", "") 
+        scheduling = policy_source.get("scheduling", {})
+        bandwidth = policy_source.get("bandwidth", {})
+        firewall = policy_source.get("firewallAndTrafficShaping", {})
+        content_filtering = policy_source.get("contentFiltering", {})
+        vlan_tagging = policy_source.get("vlanTagging", {})
+        bonjour = policy_source.get("bonjourForwarding", {})
+  
+        return firewall
