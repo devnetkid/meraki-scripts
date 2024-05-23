@@ -27,19 +27,19 @@ def main():
     color_source = fileops.colorme(source_network[1], "blue")
     log.info(f"Pulling group policies from network {source_network[1]}")
     log.info(f"The source network ID is {source_network[0]}")
-    print(f"  Preparing to copy group policies from {color_source}")
+    print(f"\nPreparing to copy group policies from {color_source}")
 
     # Load group policies 
     policy_list = settings["copygp"]["copy_policies"]
     for policy in policy_list:
-        log.info(f"  policy ID: {policy}")
-        print(f"    Policy ID: {fileops.colorme(policy, 'blue')}")
+        log.info(f"policy ID: {policy}")
+        print(f"Using policy {fileops.colorme(policy, 'blue')} as the source")
 
     # Load destinations file
     destinations = settings["copygp"]["destination_networks"]
     color_networks = fileops.colorme(destinations, "blue")
     log.info(f"Loading destinations network file {destinations}")
-    print(f"  To the destinations listed in network file {color_networks}")
+    print(f"To the destinations listed in network file {color_networks}")
     destination_networks = fileops.load_file(destinations)
 
     # Verify settings are correct before continuing
