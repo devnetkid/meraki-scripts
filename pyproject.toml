@@ -8,14 +8,14 @@ version = "0.0.1"
 dynamic = ["dependencies"]
 
 [project.scripts]
-apicalls = "meraki_scripts.apicalls:main"
 addresses = "meraki_scripts.addresses:main"
 alerts = "meraki_scripts.alerts:main"
+apicalls = "meraki_scripts.apicalls:main"
+cellular = "meraki_scripts.cellular:main"
 copygp = "meraki_scripts.copygp:main"
 deletegp = "meraki_scripts.delete_group_policies:main"
 mxuplink = "meraki_scripts.mx_uplink:main"
 networks = "meraki_scripts.networks:main"
-cellular = "meraki_scripts.cellular:main"
 updategp = "meraki_scripts.updategp:main"
 uplinkstats = "meraki_scripts.uplinkstats:main"
 sort = "meraki_scripts.sort:main"

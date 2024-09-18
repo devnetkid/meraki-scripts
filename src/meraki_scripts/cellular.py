@@ -36,7 +36,7 @@ def convert_network_id_to_name(networks, cellular_data):
 
 
 def find_cellular_uplinks(appliances):
-    cellular_uplinks = ["Site,Model,Status,Type,Signal,APN,ICCID,RSRP,RSRQ\n"]
+    cellular_uplinks = ["Site,Model,Status,Provider,Type,Signal,APN,ICCID,RSRP,RSRQ\n"]
     log.debug("The find_cellular_uplinks function has been called")
     for appliance in appliances:
         for each_link in appliance["uplinks"]:
@@ -44,6 +44,10 @@ def find_cellular_uplinks(appliances):
                 site = appliance["networkId"] + ","
                 model = appliance["model"] + ","
                 status = each_link["status"] + ","
+                if each_link["provider"]:
+                    prov = each_link["provider"] + ","
+                else:
+                    prov = "" + ","
                 if each_link["connectionType"]:
                     conn = each_link["connectionType"] + ","
                 else:
@@ -68,7 +72,7 @@ def find_cellular_uplinks(appliances):
                     rsrq = each_link["signalStat"]["rsrq"] + "\n"
                 else:
                     rsrq = "" + "\n"
-                cell_data = conn + signal + apn + iccid + rsrp + rsrq
+                cell_data = prov + conn + signal + apn + iccid + rsrp + rsrq
                 new_line = site + model + status + cell_data
                 cellular_uplinks.append(new_line)
     return cellular_uplinks

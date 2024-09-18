@@ -26,8 +26,8 @@ def main():
     print(f"The {orgname} organization with ID {orgid} has been selected\n")
     output_file = settings["apicalls"]["output_file"]
     # If getting 429 errors constantly, the key is the timespan parameter
-    response = dashboard.organizations.getOrganizationApiRequests(
-        org_id, timespan="300"
+    response = dashboard.organizations.getOrganizationApiRequestsOverview(
+        org_id, timespan="604800"
     )
     fileops.writelines_to_file(output_file, response, "json")
 

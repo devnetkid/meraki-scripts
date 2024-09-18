@@ -50,7 +50,7 @@ def writelines_to_file(filename, filedata, wtype="writelines"):
             if wtype == "writelines":
                 file_data.writelines(filedata)
             elif wtype == "json":
-                file_data.write(json.dumps(filedata))
+                json.dump(filedata, file_data, ensure_ascii=False, indent=4)
             else:
                 sys.exit("Invalid write type provided")
     except FileNotFoundError:
