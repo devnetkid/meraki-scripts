@@ -46,6 +46,10 @@ alerts = "input/alerts.json"
 filter_list = ""
 output_file = "output/cellular.csv"
 
+#identity
+[identity]
+output_file = "output/identity.txt"
+
 # updategp
 [updategp]
 network_list = "input/networks.txt"
